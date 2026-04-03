@@ -1,11 +1,12 @@
+import os
 from collections import deque
-from config.personality import personality_text # wait, I wrote it as config/personality.txt
 
 class ConversationMemory:
     def __init__(self, max_length=10):
         self.memory = deque(maxlen=max_length)
         # Load personality
-        with open("ai_rick_system/config/personality.txt", "r") as f:
+        personality_path = os.path.join(os.path.dirname(__file__), "..", "config", "personality.txt")
+        with open(personality_path, "r") as f:
             self.personality = f.read()
             
     def add_message(self, role, content):

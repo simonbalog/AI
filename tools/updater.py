@@ -12,7 +12,9 @@ def update_system():
     try:
         # 1. Git pull
         logger.info("Pulling latest changes from GitHub...")
-        pull_result = subprocess.run(["git", "pull"], capture_output=True, text=True, timeout=30)
+        # Ensure we are in the project root
+        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        pull_result = subprocess.run(["git", "-C", project_root, "pull"], capture_output=True, text=True, timeout=30)
         
         if pull_result.returncode != 0:
             return f"Git pull failed: {pull_result.stderr}"
@@ -22,7 +24,8 @@ def update_system():
         # 2. Update requirements if they changed
         if "requirements.txt" in pull_result.stdout:
             logger.info("Updating requirements...")
-            subprocess.run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"], check=True)
+            req_path = os.path.join(project_root, "requirements.txt")
+            subprocess.run([sys.executable, "-m", "pip", "install", "-r", req_path], check=True)
 
         logger.info("Update successful. Restarting system...")
         
