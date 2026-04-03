@@ -7,18 +7,41 @@ from utils.logger import logger
 
 def handle_ai_response(llm_response):
     """
-    Parses the AI response. If it's JSON, it checks for actions.
+    Parses the AI response. If it's JSON (or contains JSON), it checks for actions.
     Otherwise, it just returns the text.
     """
+    if not llm_response:
+        return ""
+
     try:
-        # Try to parse as JSON
+        # 1. First, try to parse the entire thing as JSON (standard way)
         data = json.loads(llm_response)
-        
-        # If it's a dict, check for action
+    except (json.JSONDecodeError, TypeError):
+        # 2. If it's not pure JSON, it might be Rick talking AND THEN a JSON block.
+        # Use regex to find the first '{' to the last '}'
+        import re
+        json_match = re.search(r'\{.*\}', llm_response, re.DOTALL)
+        if json_match:
+            try:
+                json_str = json_match.group(0)
+                data = json.loads(json_str)
+                # If we successfully got JSON, we also want to keep the text BEFORE the JSON
+                # so Rick's verbal sarcasm isn't lost.
+                pre_json_text = llm_response[:json_match.start()].strip()
+            except:
+                return llm_response # Failed to parse the matched part
+        else:
+            return llm_response # No JSON found at all
+
+    # If we got here, we have a valid 'data' dict
+    try:
         if isinstance(data, dict):
             action = data.get("action")
             args = data.get("args")
+            # If we had pre-JSON text, combine it with the spoken response
             spoken_response = data.get("response", "")
+            if 'pre_json_text' in locals() and pre_json_text:
+                spoken_response = f"{pre_json_text} {spoken_response}".strip()
             
             if action == "bash" and args:
                 logger.info(f"Executing action: {action} with args: {args}")
@@ -90,8 +113,8 @@ def handle_ai_response(llm_response):
             
             return spoken_response
             
-    except (json.JSONDecodeError, TypeError):
-        # Not JSON, just return the text
+    except Exception as e:
+        logger.error(f"Error processing agent action: {e}")
         return llm_response
     
     return llm_response
