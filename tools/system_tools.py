@@ -1,6 +1,35 @@
 import subprocess
+import os
 from tools.safety import is_safe_command
 from utils.logger import logger
+
+def set_volume(percentage):
+    """
+    Sets the system volume using amixer (for RPi).
+    """
+    try:
+        # amixer set Master 80%
+        # On RPi, it's often 'Headphone' or 'HDMI' or 'Speaker'
+        # We'll try common control names
+        controls = ["Master", "Headphone", "HDMI", "PCM", "Speaker"]
+        success = False
+        
+        for control in controls:
+            cmd = ["amixer", "set", control, f"{percentage}%"]
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            if result.returncode == 0:
+                success = True
+                break
+        
+        if success:
+            logger.info(f"Volume set to {percentage}%")
+            return f"Volume adjusted to {percentage}%."
+        else:
+            return "Failed to find a valid audio control (Master/Headphone/PCM)."
+            
+    except Exception as e:
+        logger.error(f"Error setting volume: {e}")
+        return f"Volume error: {str(e)}"
 
 def run_command(cmd):
     """

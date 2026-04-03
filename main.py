@@ -1,5 +1,6 @@
 import time
 import sys
+import random
 from audio.recorder import record_audio
 from audio.stt import transcribe
 from audio.tts import speak
@@ -8,10 +9,13 @@ from brain.agent import handle_ai_response
 from brain.memory import memory_manager
 from utils.logger import logger
 from utils.helpers import clean_rick_text
+from tools.system_tools import set_volume
 
 def print_rick_ascii():
-    rick_art = """
-    \033[1;32m
+    colors = ["\033[1;32m", "\033[1;34m", "\033[1;35m", "\033[1;36m", "\033[1;33m"]
+    color = random.choice(colors)
+    rick_art = f"""
+    {color}
     ██████╗ ██╗ ██████╗██╗  ██╗    ██████╗ ██████╗ ██╗███╗   ███╗███████╗
     ██╔══██╗██║██╔════╝██║ ██╔╝    ██╔══██╗██╔══██╗██║████╗ ████║██╔════╝
     ██████╔╝██║██║     █████╔╝     ██████╔╝██████╔╝██║██╔████╔██║█████╗  
@@ -78,7 +82,8 @@ def main_loop(mode="text"):
             # Clean text for terminal display and speech
             final_display = clean_rick_text(processed_response)
             
-            print(f"\033[1;34m[RICK]:\033[0m {final_display}")
+            # Print Rick's response in bright green
+            print(f"\033[1;92m[RICK]: {final_display}\033[0m")
             
             # Step 6: Speak (ALWAYS speak, even in text mode)
             speak(final_display)
@@ -99,9 +104,10 @@ def main():
     print("1) \033[1;32mTEXT MODE\033[0m (Keyboard input, Voice output) - *Jerry Proof*")
     print("2) \033[1;34mAUDIO MODE\033[0m (Voice input, Voice output) - *Rick Style*")
     print("3) \033[1;35mUPDATE SYSTEM\033[0m (Sync with GitHub) - *Peak Performance*")
-    print("4) \033[1;31mABORT MISSION\033[0m")
+    print("4) \033[1;33mVOLUME CONTROL\033[0m (Set speaker volume) - *Loud & Clear*")
+    print("5) \033[1;31mABORT MISSION\033[0m")
     
-    choice = input("\n\033[1;33mSelection [1-4]:\033[0m ")
+    choice = input("\n\033[1;33mSelection [1-5]:\033[0m ")
     
     if choice == "1":
         main_loop(mode="text")
@@ -110,6 +116,18 @@ def main():
     elif choice == "3":
         from tools.updater import update_system
         update_system()
+    elif choice == "4":
+        try:
+            vol = input("\033[1;36mEnter Volume % (0-100):\033[0m ")
+            vol_int = int(vol)
+            if 0 <= vol_int <= 100:
+                print(f"[SYSTEM]: {set_volume(vol_int)}")
+            else:
+                print("\033[1;31m[ERROR]: Enter a number between 0 and 100, Morty!\033[0m")
+        except ValueError:
+            print("\033[1;31m[ERROR]: That's not a number, you Jerry!\033[0m")
+        time.sleep(1.5)
+        main() # Back to menu
     else:
         print("\033[1;31mWubba Lubba Dub Dub! Portal jumping away...\033[0m")
         sys.exit()
