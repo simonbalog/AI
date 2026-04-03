@@ -66,6 +66,12 @@ def handle_ai_response(response_text):
             if action == "wisdom":
                 return f"{spoken_response}\n[RICK'S WISDOM]: {rick_tools.rick_wisdom()}"
             
+            if action == "roast":
+                return f"{spoken_response}\n[INSULT]: {rick_tools.roast_jerry()}"
+            
+            if action == "fact":
+                return f"{spoken_response}\n[MULTIVERSE FACT]: {rick_tools.multiverse_fact()}"
+            
             if action == "jump":
                 return f"{spoken_response}\n[QUANTUM]: {rick_tools.jump_dimension()}"
             

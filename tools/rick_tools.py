@@ -103,6 +103,28 @@ def rick_wisdom():
     ]
     return random.choice(quotes)
 
+def roast_jerry():
+    """14. Roast Jerry (Random insult)."""
+    insults = [
+        "Jerry, you're a human Participation Trophy.",
+        "Your resume is just a list of places where people were polite to you before firing you.",
+        "You're the only person I know who can fail at doing nothing.",
+        "If stupidity was a currency, you'd be a billionaire, Jerry.",
+        "I'd explain it to you, Jerry, but I don't have enough crayons."
+    ]
+    return random.choice(insults)
+
+def multiverse_fact():
+    """15. Weird Multiverse Fact."""
+    facts = [
+        "In Dimension C-500, humans evolved from telepathic giant spiders. The internet is literally a web.",
+        "There's a reality where everything is exactly the same, but the word 'pizza' means 'nuclear war'.",
+        "In one universe, the RPi 5 was invented in 1952 by a sentient toaster.",
+        "Time is linear in only 4% of the multiverse. In the rest, it's a fractal soup.",
+        "You're currently being watched by 14 different versions of yourself through various portal-mirrors."
+    ]
+    return random.choice(facts)
+
 def jump_dimension():
     """13. Terminal Color Jump."""
     colors = ["\033[1;31m", "\033[1;32m", "\033[1;33m", "\033[1;34m", "\033[1;35m", "\033[1;36m"]

@@ -6,22 +6,25 @@ from config.settings import PIPER_PATH, PIPER_MODEL, OUTPUT_DEVICE_ID
 from utils.logger import logger
 from utils.helpers import clean_rick_text
 
-def play_audio_file(file_path):
+def play_audio_file(file_path, boost=False):
     """
     Plays an audio file using available system players (mpg123, ffplay, or aplay).
+    If boost=True, tries to play it louder (for burps).
     """
     if not os.path.exists(file_path):
         logger.error(f"Audio file not found: {file_path}")
         return
 
     # Try different players commonly available on Linux/RPi
+    # mpg123: -f 32768 is default, we can double it or use -g for gain
+    # ffplay: -volume 100 is default, we can go up to 200 (though clipping may occur)
     players = [
-        ["mpg123", "-q"],
-        ["ffplay", "-nodisp", "-autoexit"],
-        ["cvlc", "--play-and-exit"]
+        ["mpg123", "-q", "-g", "100" if boost else "60"], # -g 100 is max gain, 60 is normal
+        ["ffplay", "-nodisp", "-autoexit", "-volume", "100" if boost else "70"],
+        ["cvlc", "--play-and-exit", "--gain", "2.0" if boost else "1.0"]
     ]
     
-    # If it's a wav, we can use aplay
+    # If it's a wav, we can use aplay (no easy volume boost in aplay without amixer)
     if file_path.endswith(".wav"):
         players.insert(0, ["aplay", "-q"])
 
@@ -48,7 +51,6 @@ def speak(text):
     logger.info(f"Speaking (sanitized): {clean_text}")
     
     # Split text by [[BURP]] tag
-    # Use regex to keep the tag in the split results
     parts = re.split(r'(\[\[BURP\]\])', clean_text)
     
     audio_dir = os.path.dirname(os.path.abspath(__file__))
@@ -67,10 +69,10 @@ def speak(text):
                 continue
                 
             if part == "[[BURP]]":
-                # Play a random burp sound
+                # Play a random burp sound with BOOST
                 burp_file = os.path.join(audio_dir, f"burp{random.randint(1, 3)}.mp3")
-                logger.info(f"Playing real burp: {burp_file}")
-                play_audio_file(burp_file)
+                logger.info(f"Playing real burp (BOOSTED): {burp_file}")
+                play_audio_file(burp_file, boost=True)
             else:
                 # Use Piper for text parts
                 is_low_quality = "low" in PIPER_MODEL
@@ -86,7 +88,7 @@ def speak(text):
                 
                 subprocess.run(piper_cmd, input=part.encode('utf-8'), check=True, capture_output=True)
                 
-                # Play the synthesized text
+                # Play the synthesized text (normal volume)
                 subprocess.run(["aplay", "-q", output_wav], check=True)
                 
                 # Cleanup
