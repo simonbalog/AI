@@ -4,9 +4,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # API Configuration
-API_KEY = os.getenv("LLM_API_KEY", "your_api_key_here")
-API_URL = os.getenv("LLM_API_URL", "https://api.groq.com/openai/v1/chat/completions") # Default to Groq for speed
-MODEL_NAME = os.getenv("MODEL_NAME", "llama-3.1-70b-versatile")
+API_KEY = os.getenv("LLM_API_KEY", "").strip()
+API_URL = os.getenv("LLM_API_URL", "https://api.groq.com/openai/v1/chat/completions")
+MODEL_NAME = os.getenv("MODEL_NAME", "llama3-8b-8192") # Using 8b as default for better reliability
 
 # Audio Configuration
 WAKE_WORD_MODEL = os.path.join("models", "rick.ppn")

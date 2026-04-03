@@ -12,11 +12,18 @@ def ask_llm(messages):
     payload = {
         "model": MODEL_NAME,
         "messages": messages,
-        "temperature": 0.7
+        "temperature": 0.7,
+        "max_tokens": 1024 # Add max_tokens for stability
     }
     
+    if not API_KEY:
+        logger.error("LLM_API_KEY is empty! *burp* Check your .env file, Morty.")
+        return "You forgot the API key, Morty! I'm a genius, but I can't read your mind... yet."
+
     try:
         response = requests.post(API_URL, headers=headers, json=payload)
+        if response.status_code != 200:
+            logger.error(f"Groq API Error Details: {response.text}")
         response.raise_for_status()
         data = response.json()
         return data["choices"][0]["message"]["content"]

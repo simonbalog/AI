@@ -15,6 +15,8 @@ class ConversationMemory:
     def get_messages(self):
         messages = [{"role": "system", "content": self.personality}]
         messages.extend(list(self.memory))
+        # Log for debugging (only first 50 chars of each)
+        # logger.debug(f"Sending messages: {[{'role': m['role'], 'content': m['content'][:50]} for m in messages]}")
         return messages
     
     def clear(self):
