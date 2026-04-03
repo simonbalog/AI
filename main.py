@@ -7,6 +7,7 @@ from brain.llm_client import ask_llm
 from brain.agent import handle_ai_response
 from brain.memory import memory_manager
 from utils.logger import logger
+from utils.helpers import clean_rick_text
 
 def print_rick_ascii():
     rick_art = """
@@ -74,10 +75,13 @@ def main_loop(mode="text"):
             # Step 5: Add AI response to memory
             memory_manager.add_message("assistant", llm_response)
             
-            print(f"\033[1;34m[RICK]:\033[0m {processed_response}")
+            # Clean text for terminal display and speech
+            final_display = clean_rick_text(processed_response)
+            
+            print(f"\033[1;34m[RICK]:\033[0m {final_display}")
             
             # Step 6: Speak (ALWAYS speak, even in text mode)
-            speak(processed_response)
+            speak(final_display)
             
             if mode == "audio":
                 time.sleep(0.5)
