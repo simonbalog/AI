@@ -6,6 +6,7 @@ pyaudio
 sounddevice
 soundfile
 pvporcupine
+psutil
 
 # Optional for local LLM if user chooses
 # ollama

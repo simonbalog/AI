@@ -1,6 +1,7 @@
 import json
 from tools.system_tools import run_command
 from tools.updater import update_system
+from tools import rick_tools
 from utils.logger import logger
 
 def handle_ai_response(response_text):
@@ -26,8 +27,38 @@ def handle_ai_response(response_text):
             if action == "update":
                 logger.info("Executing action: update")
                 update_result = update_system()
-                # If we get here, the update/restart failed
                 return f"{spoken_response}\n[SYSTEM ERROR]: {update_result}"
+
+            # --- NEW RICK TOOLS ---
+            if action == "stats":
+                return f"{spoken_response}\n[DIAGNOSTICS]: {rick_tools.get_system_stats()}"
+            
+            if action == "weather":
+                return f"{spoken_response}\n[WEATHER]: {rick_tools.get_weather(args or 'Prague')}"
+            
+            if action == "time":
+                return f"{spoken_response}\n[TIME]: {rick_tools.dimension_time(args)}"
+            
+            if action == "wiki":
+                return f"{spoken_response}\n[GALACTIC DATA]: {rick_tools.search_wiki(args)}"
+            
+            if action == "calculate":
+                return f"{spoken_response}\n[MATH]: {rick_tools.calculate(args)}"
+            
+            if action == "burp":
+                return f"{spoken_response} {rick_tools.get_random_burp()}"
+            
+            if action == "destruct":
+                return f"{spoken_response}\n[SECURITY]: {rick_tools.ship_self_destruct(args)}"
+            
+            if action == "cargo":
+                return f"{spoken_response}\n[CARGO]: {rick_tools.list_cargo()}"
+            
+            if action == "coin":
+                return f"{spoken_response}\n[QUANTUM]: {rick_tools.flip_coin()}"
+            
+            if action == "status":
+                return f"{spoken_response}\n[SHIP STATUS]: {rick_tools.get_ship_status()}"
             
             return spoken_response
             
