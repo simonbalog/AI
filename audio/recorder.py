@@ -1,16 +1,18 @@
 import sounddevice as sd
 import numpy as np
 import soundfile as sf
+from config.settings import INPUT_DEVICE_ID
 from utils.logger import logger
 
 def record_audio(output_path="temp.wav", duration=5, samplerate=16000):
     """
     Records audio from the microphone for a fixed duration.
-    In a more advanced version, we would use voice activity detection (VAD).
     """
-    logger.info(f"Recording for {duration} seconds...")
+    logger.info(f"Recording for {duration} seconds (Device ID: {INPUT_DEVICE_ID})...")
     try:
-        audio = sd.rec(int(duration * samplerate), samplerate=samplerate, channels=1, dtype='int16')
+        # If INPUT_DEVICE_ID is -1, sounddevice uses the default
+        device = INPUT_DEVICE_ID if INPUT_DEVICE_ID != -1 else None
+        audio = sd.rec(int(duration * samplerate), samplerate=samplerate, channels=1, dtype='int16', device=device)
         sd.wait() # wait for recording to finish
         sf.write(output_path, audio, samplerate)
         logger.info(f"Recording saved to {output_path}")
