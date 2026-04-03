@@ -23,4 +23,4 @@ INPUT_DEVICE_ID = int(os.getenv("INPUT_DEVICE_ID", -1))
 OUTPUT_DEVICE_ID = int(os.getenv("OUTPUT_DEVICE_ID", -1))
 
 # Safety
-ALLOWED_COMMANDS = ["ls", "pwd", "echo", "date", "uptime", "free", "vcgencmd", "git", "cat", "mkdir", "touch", "rm", "cp", "mv", "grep", "head", "tail", "df", "top", "whoami", "uname", "neofetch", "python3", "pip", "amixer"]
+ALLOWED_COMMANDS = ["ls", "pwd", "echo", "date", "uptime", "free", "vcgencmd", "git", "cat", "mkdir", "touch", "rm", "cp", "mv", "grep", "head", "tail", "df", "top", "whoami", "uname", "neofetch", "python3", "pip", "amixer", "reboot", "shutdown", "sudo", "apt", "wget", "curl"]

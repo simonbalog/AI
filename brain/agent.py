@@ -1,17 +1,18 @@
 import json
-from tools.system_tools import run_command
+import sys
+from tools.system_tools import run_command, power_action
 from tools.updater import update_system
 from tools import rick_tools
 from utils.logger import logger
 
-def handle_ai_response(response_text):
+def handle_ai_response(llm_response):
     """
     Parses the AI response. If it's JSON, it checks for actions.
     Otherwise, it just returns the text.
     """
     try:
         # Try to parse as JSON
-        data = json.loads(response_text)
+        data = json.loads(llm_response)
         
         # If it's a dict, check for action
         if isinstance(data, dict):
@@ -22,8 +23,20 @@ def handle_ai_response(response_text):
             if action == "bash" and args:
                 logger.info(f"Executing action: {action} with args: {args}")
                 command_result = run_command(args)
+                
+                # Check if it was a power command to trigger the actual shutdown/reboot
+                if "shutdown" in args:
+                    power_action("shutdown_pi")
+                elif "reboot" in args:
+                    power_action("reboot_pi")
+                    
                 return f"{spoken_response}\n[SYSTEM]: {command_result}"
             
+            if action == "power":
+                logger.info(f"Power action: {args}")
+                res = power_action(args)
+                return f"{spoken_response}\n[POWER]: {res}"
+
             if action == "update":
                 logger.info("Executing action: update")
                 update_result = update_system()
