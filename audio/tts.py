@@ -4,6 +4,7 @@ import random
 import re
 from config.settings import PIPER_PATH, PIPER_MODEL, OUTPUT_DEVICE_ID
 from utils.logger import logger
+from utils.helpers import clean_rick_text
 
 def speak(text):
     """
@@ -12,14 +13,9 @@ def speak(text):
     if not text:
         return
         
-    logger.info(f"Speaking: {text}")
-    
-    # Replace *burp* or burp with phonetic sounds for Rick (case-insensitive)
-    # Piper handles these better as strange phonetics
-    rick_burps = [" uuuuuurp ", " buuuuuuuurp ", " brrrrrrrgh ", " uuuuuuuuugh "]
-    
-    # Use regex for case-insensitive replacement of *burp* or burp
-    clean_text = re.sub(r'\*?burp\*?', lambda x: random.choice(rick_burps), text, flags=re.IGNORECASE)
+    # Final cleanup before speech
+    clean_text = clean_rick_text(text)
+    logger.info(f"Speaking (sanitized): {clean_text}")
     
     output_wav = "output.wav"
     

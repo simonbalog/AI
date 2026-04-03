@@ -3,27 +3,28 @@ import random
 
 def clean_rick_text(text):
     """
-    ULTRA HARD FILTER: Removes all traces of 'burp' and asterisks.
-    Forces phonetic sounds for TTS stability.
+    NUCLEAR OPTION: Eradicates 'burp' and asterisks from existence.
     """
     if not text:
         return text
         
-    # Phonetic sounds that Piper reads as real noises
+    # Sounds that actually work with Piper
     rick_noises = [" urrrghhh ", " brrrrgh ", " uuuuuurp ", " uuuuuugh "]
     
-    # 1. Brutal regex to catch 'burp', '*burp*', 'Burp', etc.
-    # We replace it with a random phonetic noise
-    cleaned = re.sub(r'\*?burp\*?', lambda x: random.choice(rick_noises), text, flags=re.IGNORECASE)
+    # 1. Literal string replacements (the most reliable way)
+    text = text.replace("*burp*", random.choice(rick_noises))
+    text = text.replace("*Burp*", random.choice(rick_noises))
+    text = text.replace("burp", random.choice(rick_noises))
+    text = text.replace("Burp", random.choice(rick_noises))
     
-    # 2. Kill all asterisks - they are the enemy of TTS
-    cleaned = cleaned.replace("*", "")
+    # 2. Regex for cases like *burp or burp* or multiple asterisks
+    text = re.sub(r'\*+burp\*+', lambda x: random.choice(rick_noises), text, flags=re.IGNORECASE)
+    text = re.sub(r'burp', lambda x: random.choice(rick_noises), text, flags=re.IGNORECASE)
     
-    # 3. Final safety: if the LLM still wrote 'burp' somehow
-    cleaned = cleaned.replace("burp", random.choice(rick_noises))
-    cleaned = cleaned.replace("Burp", random.choice(rick_noises))
+    # 3. Kill ALL asterisks - Piper hates them
+    text = text.replace("*", "")
     
     # 4. Clean up whitespace
-    cleaned = re.sub(r' +', ' ', cleaned)
+    text = re.sub(r' +', ' ', text)
     
-    return cleaned.strip()
+    return text.strip()
