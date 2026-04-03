@@ -92,6 +92,6 @@ def handle_ai_response(llm_response):
             
     except (json.JSONDecodeError, TypeError):
         # Not JSON, just return the text
-        return response_text
+        return llm_response
     
-    return response_text
+    return llm_response
