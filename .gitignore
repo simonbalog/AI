@@ -1,0 +1,21 @@
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Models and temporary files
+temp.wav
+output.wav
+models/whisper/main
+models/whisper/*.bin
+models/tts/*.onnx
+
+# Logs
+*.log

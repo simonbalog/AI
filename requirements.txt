@@ -1,0 +1,11 @@
+# Core dependencies
+requests
+python-dotenv
+numpy
+pyaudio
+sounddevice
+soundfile
+pvporcupine
+
+# Optional for local LLM if user chooses
+# ollama
