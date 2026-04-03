@@ -25,7 +25,11 @@ def speak(text):
         piper_cmd = [
             piper_exec,
             "--model", PIPER_MODEL,
-            "--output_file", output_wav
+            "--output_file", output_wav,
+            "--length_scale", "0.8",    # Rick mluví RYCHLEJI (menší číslo = rychlejší)
+            "--sentence_silence", "0.1", # Kratší pauzy mezi větami
+            "--noise_scale", "0.667",   # Trochu víc šumu pro ten "chraplák"
+            "--noise_w", "0.8"          # Variabilita hlasu
         ]
         
         subprocess.run(piper_cmd, input=text.encode('utf-8'), check=True, capture_output=True)
