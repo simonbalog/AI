@@ -8,27 +8,22 @@ def clean_rick_text(text):
     if not text:
         return text
         
-    # Sounds that actually work with Piper (Bryce model)
-    # Using phonetic combinations that trigger 'glottal' sounds or realistic interruptions
-    rick_noises = [
-        " uuu-uhhh-urp ", 
-        " ughhh-blugh-huurrp ", 
-        " uu-uuurrp ", 
-        " buuuuuurp-uuuuggh ", 
-        " ggguuurrrp ",
-        " uuh-uugh-uuurp "
-    ]
+    # Tag for the TTS engine to play a real burp sound file
+    burp_tag = " [[BURP]] "
     
-    # 1. Literal string replacements (the most reliable way)
-    # We replace 'burp' variations with phonetic sounds
-    text = re.sub(r'\*+burp\*+', lambda x: random.choice(rick_noises), text, flags=re.IGNORECASE)
-    text = re.sub(r'\bburp\b', lambda x: random.choice(rick_noises), text, flags=re.IGNORECASE)
+    # 1. Replace 'burp' variations with the tag
+    text = re.sub(r'\*+burp\*+', burp_tag, text, flags=re.IGNORECASE)
+    text = re.sub(r'\bburp\b', burp_tag, text, flags=re.IGNORECASE)
+    text = re.sub(r'\burgh\b', burp_tag, text, flags=re.IGNORECASE)
+    text = re.sub(r'\bburrrgh\b', burp_tag, text, flags=re.IGNORECASE)
     
-    # 2. Handle the specific ones the user said don't sound right
-    # 'urrrghhh' sounds like 'uuuh', so let's make it more guttural
-    text = text.replace("urrrghhh", "uuu-uugh-uuuurp")
-    # 'brrrrgh' is being spelled out, so let's make it phonetic
-    text = text.replace("brrrrgh", "ugh-bluugh-uuurp")
+    # 2. Handle the specific ones that were phonetics
+    text = text.replace("urrrghhh", burp_tag)
+    text = text.replace("brrrrgh", burp_tag)
+    text = text.replace("uuu-uugh-uuuurp", burp_tag)
+    text = text.replace("ugh-bluugh-uuurp", burp_tag)
+    text = text.replace("ggguuurrrp", burp_tag)
+    text = text.replace("uu-uuurrp", burp_tag)
     
     # 3. Kill ALL asterisks - Piper hates them
     text = text.replace("*", "")
