@@ -22,14 +22,23 @@ def speak(text):
             piper_exec = os.path.join(project_root, PIPER_PATH)
 
         # Command for Piper
+        # We adjust parameters to make the voice sound more like Rick Sanchez
+        # - length_scale: Speed of speech (lower = faster)
+        # - sentence_silence: Silence between sentences
+        # - noise_scale: Variability in pitch (adds that 'raspy' feel)
+        # - noise_w: Variability in phoneme duration
+        
+        # Check if we're using a low or medium quality model to adjust parameters
+        is_low_quality = "low" in PIPER_MODEL
+        
         piper_cmd = [
             piper_exec,
             "--model", PIPER_MODEL,
             "--output_file", output_wav,
-            "--length_scale", "0.8",    # Rick mluví RYCHLEJI (menší číslo = rychlejší)
-            "--sentence_silence", "0.1", # Kratší pauzy mezi větami
-            "--noise_scale", "0.667",   # Trochu víc šumu pro ten "chraplák"
-            "--noise_w", "0.8"          # Variabilita hlasu
+            "--length_scale", "0.82" if is_low_quality else "0.85",
+            "--sentence_silence", "0.1",
+            "--noise_scale", "0.667",
+            "--noise_w", "0.8"
         ]
         
         subprocess.run(piper_cmd, input=text.encode('utf-8'), check=True, capture_output=True)
