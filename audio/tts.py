@@ -1,5 +1,6 @@
 import subprocess
 import os
+import random
 from config.settings import PIPER_PATH, PIPER_MODEL, OUTPUT_DEVICE_ID
 from utils.logger import logger
 
@@ -11,6 +12,12 @@ def speak(text):
         return
         
     logger.info(f"Speaking: {text}")
+    
+    # Replace *burp* with phonetic sound for Rick
+    rick_burps = ["...urrrrp...", "...buuuurp...", "...brrrrgh...", "...uuuugh..."]
+    clean_text = text.replace("*burp*", random.choice(rick_burps))
+    clean_text = clean_text.replace("burp", random.choice(rick_burps))
+    
     output_wav = "output.wav"
     
     try:
@@ -41,7 +48,7 @@ def speak(text):
             "--noise_w", "0.8"
         ]
         
-        subprocess.run(piper_cmd, input=text.encode('utf-8'), check=True, capture_output=True)
+        subprocess.run(piper_cmd, input=clean_text.encode('utf-8'), check=True, capture_output=True)
         
         # Play the result (optionally with a specific device)
         aplay_cmd = ["aplay", output_wav]

@@ -60,6 +60,15 @@ def handle_ai_response(response_text):
             if action == "status":
                 return f"{spoken_response}\n[SHIP STATUS]: {rick_tools.get_ship_status()}"
             
+            if action == "python":
+                return f"{spoken_response}\n[PYTHON LOGIC]: {rick_tools.run_python_logic(args)}"
+            
+            if action == "wisdom":
+                return f"{spoken_response}\n[RICK'S WISDOM]: {rick_tools.rick_wisdom()}"
+            
+            if action == "jump":
+                return f"{spoken_response}\n[QUANTUM]: {rick_tools.jump_dimension()}"
+            
             return spoken_response
             
     except (json.JSONDecodeError, TypeError):

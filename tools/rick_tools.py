@@ -80,3 +80,31 @@ def calculate(expression):
 def get_ship_status():
     """10. Full Ship Status."""
     return "Shields: 12%. Fuel: Low. Sarcasm: 100%. We're doing great."
+
+def run_python_logic(code):
+    """11. Rick's Python Executor (Scientific Logic)."""
+    try:
+        # Warning: This is a simplified executor for fun
+        # In a real Rick ship, this would be a secure sandbox
+        exec_globals = {}
+        exec(code, exec_globals)
+        return f"Logic executed. Result: {exec_globals.get('result', 'No result variable found.')}"
+    except Exception as e:
+        return f"Logic error: {str(e)}. Stick to the basics, Morty."
+
+def rick_wisdom():
+    """12. Random Rick Nihilism."""
+    quotes = [
+        "To live is to risk it all; otherwise you're just an inert chunk of randomly assembled molecules floating wherever the universe blows you.",
+        "Nobody exists on purpose. Nobody belongs anywhere. Everybody's gonna die. Come watch TV?",
+        "Wubba Lubba Dub Dub! (I am in great pain, please help me.)",
+        "The universe is basically an animal. It grazes on the ordinary. It creates infinite idiots just to eat them.",
+        "Scientific tradition is to take the shortest path to the answer."
+    ]
+    return random.choice(quotes)
+
+def jump_dimension():
+    """13. Terminal Color Jump."""
+    colors = ["\033[1;31m", "\033[1;32m", "\033[1;33m", "\033[1;34m", "\033[1;35m", "\033[1;36m"]
+    color = random.choice(colors)
+    return f"{color}DIMENSION JUMP SUCCESSFUL. Terminal stabilized in new reality.\033[0m"
