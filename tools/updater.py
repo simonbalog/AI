@@ -17,8 +17,8 @@ def update_system():
         logger.info("Pulling latest changes from GitHub...")
         project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         
-        # Ensure we have the right remote
-        subprocess.run(["git", "-C", project_root, "remote", "set-url", "origin", "git@github.com:simonbalog/AI.git"], check=True)
+        # Ensure we have the right remote (using HTTPS as requested for the RPi)
+        subprocess.run(["git", "-C", project_root, "remote", "set-url", "origin", "https://github.com/simonbalog/AI.git"], check=True)
         
         pull_result = subprocess.run(["git", "-C", project_root, "pull", "origin", "main"], capture_output=True, text=True, timeout=30)
         

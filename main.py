@@ -98,14 +98,18 @@ def main():
     print("\033[1;36mSelect Operation Mode:\033[0m")
     print("1) \033[1;32mTEXT MODE\033[0m (Keyboard input, Voice output) - *Jerry Proof*")
     print("2) \033[1;34mAUDIO MODE\033[0m (Voice input, Voice output) - *Rick Style*")
-    print("3) \033[1;31mABORT MISSION\033[0m")
+    print("3) \033[1;35mUPDATE SYSTEM\033[0m (Sync with GitHub) - *Peak Performance*")
+    print("4) \033[1;31mABORT MISSION\033[0m")
     
-    choice = input("\n\033[1;33mSelection [1-3]:\033[0m ")
+    choice = input("\n\033[1;33mSelection [1-4]:\033[0m ")
     
     if choice == "1":
         main_loop(mode="text")
     elif choice == "2":
         main_loop(mode="audio")
+    elif choice == "3":
+        from tools.updater import update_system
+        update_system()
     else:
         print("\033[1;31mWubba Lubba Dub Dub! Portal jumping away...\033[0m")
         sys.exit()
